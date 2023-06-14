@@ -31,7 +31,6 @@ namespace BookStore.Books
         
         public async Task<PagedResultDto<BookDto>> GetListAsync(BookGetListInput input)
         {
-            var count = await GetCountAsync(input.Filter);
             var books = await _bookRepository.GetListAsync(input.Sorting, input.SkipCount, input.MaxResultCount,input.Filter);
             var totalCount = await _bookRepository.CountAsync();
 
