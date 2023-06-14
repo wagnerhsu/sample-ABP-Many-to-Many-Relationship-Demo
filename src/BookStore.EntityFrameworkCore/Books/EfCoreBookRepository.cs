@@ -23,10 +23,12 @@ namespace BookStore.Books
             string sorting, 
             int skipCount, 
             int maxResultCount, 
+            string filter=null,
             CancellationToken cancellationToken = default
         )
         {
             var query = await ApplyFilterAsync();
+            query = query.WhereIf(!filter.IsNullOrWhiteSpace(), x => x.Name.Contains(filter));
             
             return await query
                 .OrderBy(!string.IsNullOrWhiteSpace(sorting) ? sorting : nameof(Book.Name))

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using BookStore.Authors;
 using BookStore.Categories;
@@ -30,7 +31,8 @@ namespace BookStore.Books
         
         public async Task<PagedResultDto<BookDto>> GetListAsync(BookGetListInput input)
         {
-            var books = await _bookRepository.GetListAsync(input.Sorting, input.SkipCount, input.MaxResultCount);
+            var count = await GetCountAsync(input.Filter);
+            var books = await _bookRepository.GetListAsync(input.Sorting, input.SkipCount, input.MaxResultCount,input.Filter);
             var totalCount = await _bookRepository.CountAsync();
 
             return new PagedResultDto<BookDto>(totalCount, ObjectMapper.Map<List<BookWithDetails>, List<BookDto>>(books));
@@ -89,6 +91,14 @@ namespace BookStore.Books
             return new ListResultDto<CategoryLookupDto>(
                 ObjectMapper.Map<List<Category>, List<CategoryLookupDto>>(categories)
             );
+        }
+
+        public async Task<long> GetCountAsync(string filter = null)
+        {
+            if (filter.IsNullOrWhiteSpace()) return await _bookRepository.GetCountAsync();
+
+            var all = await _bookRepository.GetListAsync(x => x.Name.Contains(filter));
+            return all.Count;
         }
     }
 }

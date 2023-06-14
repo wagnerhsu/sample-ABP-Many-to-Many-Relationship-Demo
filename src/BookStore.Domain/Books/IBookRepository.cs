@@ -12,6 +12,7 @@ namespace BookStore.Books
             string sorting,
             int skipCount,
             int maxResultCount,
+            string filter = null,
             CancellationToken cancellationToken = default
         );
 

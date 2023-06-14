@@ -22,5 +22,7 @@ namespace BookStore.Books
         Task<ListResultDto<AuthorLookupDto>> GetAuthorLookupAsync();
 
         Task<ListResultDto<CategoryLookupDto>> GetCategoryLookupAsync();
+
+        Task<long> GetCountAsync(string filter = null);
     }
 }
